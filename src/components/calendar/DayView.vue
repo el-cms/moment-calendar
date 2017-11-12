@@ -1,25 +1,50 @@
 <template>
-  <div>
-    day: {{day}}
-    <div class="cal-view--day">
+  <div class="mc-cal-view mc-cal-view--day">
+    <!-- Navigation links -->
+    <div class="mc-cal-links" v-if="displayLinks">
+      <div class="link">
+        <button @click="prevDay()">&lt;</button>
+      </div>
+      <div class="link">
+        <button @click="targetNow()">Today</button>
+      </div>
+      <div class="header">
+        <span class="string">Displayed day:</span>
+        {{targetDate.format('dd, LL')}}
+      </div>
+      <div class="link">
+        <button @click="nextDay()">&gt;</button>
+      </div>
+    </div>
+
+
+    <!-- Full-day events -->
+    <div class="mc-full-day-events" v-if="grid.fullDayEvents.length > 0">
       <div class="fullday">
-        <component v-for="e, index in sortedEvents.fullDay"
+        <component v-for="e, index in grid.fullDayEvents"
                    :data="e"
                    :key="index"
                    :is="e.type === 'event' ? 'Event' : 'Task'"></component>
       </div>
-      <div class="hour" v-for="h in hours">
-        <div class="hour-side">{{h}}h</div>
-        <div class="hour-content">
-          <component v-for="e, index in sortedEvents[h]"
-                     :data="e"
-                     :key="index"
-                     :is="e.type === 'event' ? 'Event' : 'Task'"></component>
-        </div>
-      </div>
-      <div :class="`cal-view--${e.type}`" v-for="e in events">{{e.title}}</div>
     </div>
-    <pre>{{sortedEvents}}</pre>
+
+    <!-- Time ruler -->
+    <div class="ruler" :style="rulerStyle"></div>
+
+    <!-- Hours -->
+    <div class="mc-hour-line" v-for="events, h in grid.events">
+      <!-- Hour text -->
+      <div class="hour">{{h}}h</div>
+      <!-- Events -->
+      <div class="content">
+        <component v-for="e, index in events"
+                   :data="e"
+                   :key="index"
+                   :is="e.type === 'event' ? 'Event' : 'Task'"></component>
+      </div>
+    </div>
+
+    <pre>{{grid}}</pre>
   </div>
 </template>
 
@@ -32,92 +57,99 @@
     name: 'calendar-day-view',
     props: {
       events: {required: false, type: Array, default: () => []},
-      day: {required: false, default: () => moment()} // @todo Type ?
+      baseDay: {required: false, default: () => moment()}, // @todo Type ?
+      displayLinks: {required: false, default: true, type: Boolean}
     },
     components: {Task, Event},
     data () {
       return {
-        hours: [...Array(24)].map((x, i) => i)
+        targetDate: this.$props.baseDay,
+        today: moment(),
+        grid: {},
+        processing: true,
+        rulerStyle: 'top:0'
       }
     },
-    computed: {
-      currentDay () {
-        return moment(this.$props.day)
+    methods: {
+      /**
+       * Fills the grid for next day
+       */
+      nextDay () {
+        const newDay = this.targetDate.day() + 1
+        this.targetDate = this.targetDate.day(newDay)
+        this.fillGrid()
       },
-      sortedEvents () {
+      /**
+       * Fills the grid for previous day
+       */
+      prevDay () {
+        const newDay = this.targetDate.day() - 1
+        this.targetDate = this.targetDate.day(newDay)
+        this.fillGrid()
+      },
+      fillGrid () {
+        const baseDay = this.$props.baseDay
         const out = {}
-        const currentYear = this.currentDay.year()
-        const currentMonth = this.currentDay.month()
-        const currentDay = this.currentDay.date()
+        var displayStartDate = baseDay.clone().startOf('day')
+        var displayEndDate = baseDay.clone().endOf('day')
 
-        out.fullDay = []
+        // Prepare the output
+        out.fullDayEvents = []
+        out.events = {}
 
         for (let i = 0; i < 24; i++) {
-          out[i] = []
+          out.events[i] = []
         }
 
         // Sorting events
-        for (const e of this.$props.events) {
-//          console.group('checking event')
-          var date = null
-          if (e.dueDate) {
-//            console.log('task')
-            date = moment(e.dueDate)
-          } else if (e.startDate) {
-//            console.log('event')
-            date = moment(e.startDate)
-          } else {
-//            console.log('nothing')
-          }
+        for (const e of this.$props.events) { // Task
+          if (
+            e.dueDate &&
+            e.dueDate.isBetween(displayStartDate, displayEndDate)
+          ) {
+            out.events[e.dueDate.hour()].push(e)
+          } else if ( // Event
 
-//          console.log(date.year() === currentYear, date.month() === currentMonth, date.date() === currentDay)
+          e.type === 'event' &&
+          (
+            // End or beginning is today
+            (
+              e.startDate.isBetween(displayStartDate, displayEndDate) ||
+              e.endDate.isBetween(displayStartDate, displayEndDate)
+            ) ||
+            // Today is in range
+            (
+              this.targetDate.isBetween(e.startDate, e.endDate)
+            )
+          )
+          ) {
+            if (e.fullDay) { // Full-day event
+              out.fullDayEvents.push(e)
+            } else {         // Regular event
+              // Copy to avoid issues with changed dates
+              // @todo this, but better
+              const newEvent = JSON.parse(JSON.stringify(e))
+              newEvent.startDate = moment(newEvent.startDate)
+              newEvent.endDate = moment(newEvent.endDate)
+              // Check for start date...
+              if (newEvent.startDate.format('YYYY-MM-DD') !== this.targetDate.format('YYYY-MM-DD')) {
+                newEvent.startDate = displayStartDate.clone()
+              }
 
-          if (e.type === 'event' && e.fullDay) {
-            out.fullDay.push(e)
-          } else if (date &&
-            date.year() === currentYear &&
-            date.month() === currentMonth &&
-            date.date() === currentDay) {
-//            console.log('Adding event')
-            out[date.hour()].push(e)
+              if (newEvent.endDate.format('YYYY-MM-DD') !== this.targetDate.format('YYYY-MM-DD')) {
+                newEvent.endDate = displayEndDate.clone()
+              }
+
+              out.events[newEvent.startDate.hour()].push(newEvent)
+            }
           }
-//          console.groupEnd()
         }
-//        console.log(out)
-        return out
+        this.grid = out
       }
+    },
+    created () {
+      this.fillGrid()
+      this.rulerStyle = `top:calc(50px * ${this.today.hour()})`
     }
   }
 </script>
-
-<style scoped lang="scss">
-  .cal-view {
-    &--day {
-      .hour {
-        display: flex;
-        max-height: 50px;
-        height: 50px;
-        width: 100%;
-        border-top: 1px solid lightgray;
-        .hour-side {
-          width: 50px;
-          text-align: right;
-          padding-right: .5em;
-          border-right: 1px solid lightgray;
-          margin-right: .5em;
-          max-height: 3em;
-          height: 3em;
-        }
-        .hour-content {
-          flex-grow: 2;
-          display: flex;
-          width:100%;
-          & > div {
-            //position:absolute;
-            /*flex-grow: 2;*/
-          }
-        }
-      }
-    }
-  }
-</style>

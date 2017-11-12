@@ -1,0 +1,62 @@
+.#{$prefix}-cal-view {
+  /* Day view */
+  &--day {
+    /* One line: contains the hour and the events */
+    .#{$prefix}-hour-line {
+      display: flex;
+      max-height: 50px;
+      height: 50px;
+      width: 100%;
+      border-top: 1px solid lightgray;
+      /* Hour cell */
+      .hour {
+        width: 50px;
+        text-align: right;
+        padding-right: .5em;
+        border-right: 1px solid lightgray;
+        margin-right: .5em;
+        max-height: 3em;
+        height: 3em;
+      }
+      /* Content cell */
+      .content {
+        flex-grow: 2;
+        display: flex;
+        width: 100%;
+      }
+    }
+  }
+  /* Month view */
+  &--month {
+    /* Day names */
+    .#{$prefix}-headers {
+      display: flex;
+      width: 100%;
+      .day {
+        width: calc(100% / 7);
+        text-align: center;
+        padding: .5em;
+      }
+    }
+    /* List of all days */
+    .#{$prefix}-days {
+      padding:0;
+      display: flex;
+      flex-wrap: wrap;
+      /* One day cell */
+      .day {
+        width: calc(100% / 7 - 1px);
+        min-height: 8em;
+        height: 8em;
+        border: 1px solid lightgray;
+        border-width: 0 0 1px 1px;
+        padding: .5em;
+        overflow: hidden;
+        .header{
+          text-decoration: none;
+          color: blue;
+        }
+      }
+    }
+  }
+}

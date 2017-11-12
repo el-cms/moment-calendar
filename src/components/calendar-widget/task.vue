@@ -1,6 +1,6 @@
 <template>
-  <div class="cal-task">
-    <div class="icon">&check;</div> {{data.title}}
+  <div class="mc-task">
+    <span class="mc-task-description">{{data.title}}</span>
   </div>
 </template>
 
@@ -15,20 +15,3 @@
     }
   }
 </script>
-
-<style lang="scss">
-  .cal-task{
-    color: gray;
-    .icon {
-      background-color: #ff6a6b;
-      line-height: 1em;
-      border-radius: 50%;
-      padding: 0.3em;
-      text-align: center;
-      display: inline-block;
-      width: 16px;
-      border:3px solid #eee;
-      color: white;
-    }
-  }
-</style>

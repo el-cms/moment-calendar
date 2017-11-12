@@ -1,46 +1,47 @@
 <template>
-  <div>
-    Today: {{today}}
-    <div style="display:flex; font-size:2em;">
-      <button style="width:50px" @click="prevMonth()">&larr;</button>
-      <div style="width:50px; text-align:center">NOW</div>
-      <div style="flex-grow:2; text-align:center">Displayed month: {{targetDate.month() + 1}} - {{targetDate.year()}}
+  <div class="mc-cal-view mc-cal-view--month">
+
+    <div class="mc-cal-links" v-if="displayLinks">
+      <div class="link">
+        <button @click="prevMonth()">&lt;</button>
       </div>
-      <button style="width:50px; text-align: right" @click="nextMonth()">&rarr;</button>
+      <div class="link">
+        <button @click="targetNow()">Current month</button>
+      </div>
+      <div class="header">
+        <span class="string">Displayed month:</span>
+        {{targetDate.format('YYYY, MMMM')}}
+      </div>
+      <div class="link">
+        <button @click="nextMonth()">&gt;</button>
+      </div>
     </div>
-    <div class="cal-view--month">
 
-      <div class="day--names">
-        <div class="day">Lundi</div>
-        <div class="day">Mardi</div>
-        <div class="day">Mercredi</div>
-        <div class="day">Jeudi</div>
-        <div class="day">Vendredi</div>
-        <div class="day">Samedi</div>
-        <div class="day">Dimanche</div>
-      </div>
+    <div class="mc-headers">
+      <div class="day" v-for="d in days">{{d}}</div>
+    </div>
 
-      <div class="days">
-        <template v-for="y in grid" v-if="!processing">
-          <template v-for="m, mIndex in y">
-            <div v-for="d, index in m" class="day"
-                 :class="{grayed: parseInt(targetDate.month(), 10) !== parseInt(mIndex,10) }">
-              <div class="header" @click="$emit('viewday', {y, m, d})">{{parseInt(index, 10) + 1}}</div>
-              <div class="events">
-                <component v-for="e, index in d"
-                           :data="e"
-                           :key="index"
-                           :is="e.type === 'event' ? 'Event' : 'Task'"></component>
-              </div>
+    <div class="mc-days">
+      <template v-for="y, yIndex in grid" v-if="!processing">
+        <template v-for="m, mIndex in y">
+          <div v-for="d, index in m" class="day"
+               :class="{'out-of-scope': parseInt(targetDate.month(), 10) !== parseInt(mIndex,10) }">
+            <a class="header" href="#" @click="$emit('viewDay', {type:'day', y:yIndex, m:mIndex, d:index})">
+              {{parseInt(index, 10) + 1}}
+            </a>
+            <div class="events">
+              <component v-for="e, index in d"
+                         :data="e"
+                         :key="index"
+                         :is="e.type === 'event' ? 'Event' : 'Task'"></component>
             </div>
-          </template>
+          </div>
         </template>
-        <div v-else>Préparation...</div>
-      </div>
-
+      </template>
+      <div v-else>Loading...</div>
     </div>
-    <pre>{{events}}</pre>
-    <pre>{{grid}}</pre>
+    <!--<pre>{{events}}</pre>-->
+    <!--<pre>{{grid}}</pre>-->
   </div>
 </template>
 
@@ -48,81 +49,28 @@
   import moment from 'moment'
   import Task from '../calendar-widget/task'
   import Event from '../calendar-widget/event'
-  import fakeApi from '../../fakeApi'
 
   export default {
     name: 'calendar-month-view',
     props: {
       events: {required: false, type: Array, default: () => []},
-      baseDay: {required: false, default: () => moment()} // @todo Type ?
+      baseDay: {required: false, default: () => moment()}, // @todo Type ?
+      displayLinks: {required: false, default: true, type: Boolean}
     },
     components: {Task, Event},
     data () {
+      const days = []
+      // Building day names list
+      for (let i = 1; i <= 7; i++) {
+        days.push(moment().day(i).format('dddd'))
+      }
       return {
         targetDate: this.$props.baseDay,
         today: moment().format('YYYY-MM-DD'),
         grid: {},
-        processing: true
+        processing: true,
+        days
       }
-    },
-    computed: {
-//      /**
-//       * Returns the current year
-//       * @returns {number}
-//       */
-//      year () {
-//        return this.targetDate.year()
-//      },
-//      /**
-//       * Returns the current month
-//       * @returns {number}
-//       */
-//      month () {
-//        return this.targetDate.month()
-//      },
-//      sortedEvents () {
-//        return {}
-////        const out = {}
-////        const currentYear = this.currentDay.year()
-////        const currentMonth = this.currentDay.month()
-////        const currentDay = this.currentDay.date()
-////
-////        out.fullDay = []
-////
-////        for (let i = 0; i < 24; i++) {
-////          out[currentYear][currentMonth][i] = []
-////        }
-////
-////        // Sorting events
-////        for (const e of this.$props.events) {
-//////          console.group('checking event')
-////          var date = null
-////          if (e.dueDate) {
-//////            console.log('task')
-////            date = moment(e.dueDate)
-////          } else if (e.startDate) {
-//////            console.log('event')
-////            date = moment(e.startDate)
-////          } else {
-//////            console.log('nothing')
-////          }
-////
-//////          console.log(date.year() === currentYear, date.month() === currentMonth, date.date() === currentDay)
-////
-////          if (e.type === 'event' && e.fullDay) {
-////            out.fullDay.push(e)
-////          } else if (date &&
-////            date.year() === currentYear &&
-////            date.month() === currentMonth &&
-////            date.date() === currentDay) {
-////            console.log('Adding event')
-//////            out[date.hour()].push(e)
-////          }
-//////          console.groupEnd()
-////        }
-//////        console.log(out)
-////        return out
-//      }
     },
     methods: {
       /**
@@ -130,7 +78,7 @@
        */
       nextMonth () {
         const newMonth = this.targetDate.month() + 1
-        console.log('> Next month: ', newMonth)
+//        console.log('> Next month: ', newMonth)
         this.targetDate = this.targetDate.month(newMonth)
         this.fillGrid()
       },
@@ -139,7 +87,7 @@
        */
       prevMonth () {
         const newMonth = this.targetDate.month() - 1
-        console.log('> Prev month', newMonth)
+//        console.log('> Prev month', newMonth)
         this.targetDate = this.targetDate.month(newMonth)
         this.fillGrid()
       },
@@ -202,7 +150,7 @@
 //          displayEndDate = displayEndDate.add(`${nextMonthDelta}d`)
         }
 
-        console.log(displayStartDate, displayEndDate)
+//        console.log(displayStartDate, displayEndDate)
 
         // Adding events
         const years = Object.keys(out)
@@ -226,7 +174,7 @@
               e.endDate.isBetween(displayStartDate, displayEndDate)
             )
           ) {
-            console.log(e.startDate.toString(), e.endDate.toString())
+//            console.log(e.startDate.toString(), e.endDate.toString())
             // Find days concerned by this event
             // @todo this, but better
             const startDay = e.startDate.clone().startOf('day')
@@ -237,10 +185,10 @@
                   if (e.startDate.month() == m || e.endDate.month() == m) {
                     // Days
                     for (const d in out[y][m]) {
-                      console.log(e.startDate.format('YYYY-MM-DD'))
+//                      console.log(e.startDate.format('YYYY-MM-DD'))
                       if (moment([y, m, d]).hour(1).isBetween(startDay, endDay)) {
-                        console.log('Found on ', d, e)
-                        out[y][m][d].push(e)
+//                        console.log('Found on ', d, e)
+                        out[y][m][d - 1].push(e)
                       }
                     }
                   }
@@ -253,6 +201,9 @@
         console.groupEnd()
         this.processing = false
         this.grid = out
+      },
+      targetNow () {
+        this.targetDate = moment()
       }
     },
     created () {
@@ -260,60 +211,3 @@
     }
   }
 </script>
-
-<style scoped lang="scss">
-  .grayed {
-    color: gray
-  }
-
-  .cal-view {
-    &--month {
-      border: 1px solid gray;
-      border-collapse: collapse;
-      .day--names {
-        display: flex;
-        width: 100%;
-        .day {
-          width: calc(100% / 7);
-          text-align: center
-        }
-      }
-      .days {
-        display: flex;
-        flex-wrap: wrap;
-        .day {
-          width: calc(100% / 7 - 1px);
-          min-height: 8em;
-          height: 8em;
-          border: 1px solid lightgray;
-          border-width: 0 0 1px 1px;
-        }
-      }
-      /*.hour {*/
-      /*display: flex;*/
-      /*max-height: 50px;*/
-      /*height: 50px;*/
-      /*width: 100%;*/
-      /*border-top: 1px solid lightgray;*/
-      /*.hour-side {*/
-      /*width: 50px;*/
-      /*text-align: right;*/
-      /*padding-right: .5em;*/
-      /*border-right: 1px solid lightgray;*/
-      /*margin-right: .5em;*/
-      /*max-height: 3em;*/
-      /*height: 3em;*/
-      /*}*/
-      /*.hour-content {*/
-      /*flex-grow: 2;*/
-      /*display: flex;*/
-      /*width: 100%;*/
-      /*& > div {*/
-      /*//position:absolute;*/
-      /*!*flex-grow: 2;*!*/
-      /*}*/
-      /*}*/
-      /*}*/
-    }
-  }
-</style>

@@ -11,10 +11,10 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "moment": "^2.19.2",
     "node-sass": "^4.6.0",
     "sass-loader": "^6.0.6",
-    "vue": "^2.5.2",
-    "vue-moment": "^2.2.0"
+    "vue": "^2.5.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

@@ -1,0 +1,107 @@
+.#{$prefix}-cal-view {
+  /* Event */
+  .#{$prefix}-event {
+    @mixin time-length($duration) {
+
+    }
+    font-size: .8em;
+    border: 1px solid black;
+    padding: .3em .5em;
+    border-left: 3px solid black;
+    background-color: white;
+    /* Variation : Full day */
+    &--full-day {
+      border-left: 3px double black;
+      &:before {
+        content: '(F)';
+        margin-right: .5em
+      }
+    }
+  }
+  /* Standard task */
+  .#{$prefix}-task {
+    &:before {
+      line-height: 1em;
+      border-radius: 50%;
+      padding: 0.3em;
+      text-align: center;
+      display: inline-block;
+      width: 16px;
+      border: 1px solid black;
+      content: '\2713';
+      margin-right: .5em;
+    }
+  }
+
+  /* Full day events */
+  .#{$prefix}-full-day-events {
+    margin-bottom: .5em;
+  }
+
+  /* Specific variations for day view */
+  &--day {
+    .#{$prefix}-event {
+      flex-grow: 1;
+      margin-right: .5em;
+      &:last-child {
+        margin-right: 0;
+      }
+      @for $i from 1 through 24 {
+        &--#{$i}h {
+          height: calc(#{$i} * 50px - 1em);
+        }
+      }
+    }
+    .#{$prefix}-task {
+    }
+
+  }
+  /* Specific variations for month view */
+  &--month {
+    .#{$prefix}-event {
+    }
+    .#{$prefix}-task {
+      display: inline-block;
+      &-description {
+        display: none;
+      }
+    }
+    .out-of-scope {
+      color: gray;
+      background-color: lightgray;
+    }
+  }
+
+  /*  Calendar links **/
+  .#{$prefix}-cal-links {
+    display: flex;
+    margin-bottom: .5em;
+    font-size: 1.5em;
+    .link {
+      &:first-child {
+        margin-right: .5em;
+      }
+      &:last-child {
+        text-align: right;
+        margin-left: .5em;
+      }
+    }
+    .string {
+      color: gray;
+      font-size: .5em;
+    }
+    .header {
+      flex-grow: 2;
+      text-align: center
+    }
+  }
+
+  .ruler {
+    display: block;
+    position: relative;
+    border-top: 1px dashed red;
+    height: 1px;
+    min-height: 1px;
+    width: 100%;
+  }
+}
