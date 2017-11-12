@@ -58,19 +58,19 @@
 
         // Sorting events
         for (const e of this.$props.events) {
-          console.group('checking event')
+//          console.group('checking event')
           var date = null
           if (e.dueDate) {
-            console.log('task')
+//            console.log('task')
             date = moment(e.dueDate)
           } else if (e.startDate) {
-            console.log('event')
+//            console.log('event')
             date = moment(e.startDate)
           } else {
-            console.log('nothing')
+//            console.log('nothing')
           }
 
-          console.log(date.year() === currentYear, date.month() === currentMonth, date.date() === currentDay)
+//          console.log(date.year() === currentYear, date.month() === currentMonth, date.date() === currentDay)
 
           if (e.type === 'event' && e.fullDay) {
             out.fullDay.push(e)
@@ -78,12 +78,12 @@
             date.year() === currentYear &&
             date.month() === currentMonth &&
             date.date() === currentDay) {
-            console.log('Adding event')
+//            console.log('Adding event')
             out[date.hour()].push(e)
           }
-          console.groupEnd()
+//          console.groupEnd()
         }
-        console.log(out)
+//        console.log(out)
         return out
       }
     }

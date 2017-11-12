@@ -1,5 +1,16 @@
 <template>
   <div id="app">
+    <ul>
+      <li>
+        <button @click="view = 'DayView'">Day</button>
+      </li>
+      <li>
+        <button @click="view = 'WeekView'">Week</button>
+      </li>
+      <li>
+        <button @click="view = 'MonthView'">Month</button>
+      </li>
+    </ul>
     <component :is="view" :events="data"></component>
     <pre>{{data}}</pre>
   </div>
@@ -27,7 +38,7 @@
 </script>
 
 <style>
-  body{
+  body {
     font-family: sans-serif;
     box-sizing: border-box;
   }
