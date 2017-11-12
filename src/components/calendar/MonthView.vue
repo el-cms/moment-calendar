@@ -5,9 +5,8 @@
 <script>
   export default {
     name: 'calendar-month-view',
-    data() {
+    data () {
       return {}
-    },
+    }
   }
-
 </script>

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <component :is="view"></component>
+    <component :is="view" :events="data"></component>
+    <pre>{{data}}</pre>
   </div>
 </template>
 
@@ -9,26 +10,25 @@
   import MonthView from './components/calendar/MonthView'
   import WeekView from './components/calendar/WeekView'
 
+  import fake from './fakeApi'
+
   export default {
     name: 'app',
     components: {
-      DayView, WeekView, MonthView,
+      DayView, WeekView, MonthView
     },
-    data() {
+    data () {
       return {
         view: DayView,
+        data: fake.get()
       }
-    },
+    }
   }
 </script>
 
 <style>
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+  body{
+    font-family: sans-serif;
+    box-sizing: border-box;
   }
 </style>
