@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="mc-headers">
+    <div class="mc-headers" v-if="displayDayNames">
       <div class="day" v-for="d in days">{{d}}</div>
     </div>
 
@@ -25,11 +25,14 @@
       <template v-for="y, yIndex in grid" v-if="!processing">
         <template v-for="m, mIndex in y">
           <div v-for="d, index in m" class="day"
-               :class="{'out-of-scope': parseInt(targetDate.month(), 10) !== parseInt(mIndex,10) }">
+               :class="{
+            'out-of-scope': parseInt(targetDate.month(), 10) !== parseInt(mIndex,10),
+            'current-day' : isToday([yIndex, mIndex, index])
+                }">
             <a class="header" href="#" @click="$emit('viewDay', {type:'day', y:yIndex, m:mIndex, d:index})">
               {{parseInt(index, 10) + 1}}
             </a>
-            <div class="events">
+            <div class="events" v-if="displayEvents">
               <component v-for="e, index in d"
                          :data="e"
                          :key="index"
@@ -55,9 +58,17 @@
     props: {
       events: {required: false, type: Array, default: () => []},
       baseDay: {required: false, default: () => moment()}, // @todo Type ?
-      displayLinks: {required: false, default: true, type: Boolean}
+      displayLinks: {required: false, default: true, type: Boolean},
+      displayEvents: {required: false, default: true, type: Boolean},
+      displayDayNames: {required: false, default: true, type: Boolean}
+//      taskComponent: {required: false, default: null, type: Object},
+//      eventComponent: {required: false, default: null, type: Object}
     },
-    components: {Task, Event},
+    components: {
+//      Task: this.$props.taskComponent,
+//      Event: this.$props.eventComponent
+      Task, Event
+    },
     data () {
       const days = []
       // Building day names list
@@ -66,7 +77,7 @@
       }
       return {
         targetDate: this.$props.baseDay,
-        today: moment().format('YYYY-MM-DD'),
+        today: moment(),
         grid: {},
         processing: true,
         days
@@ -101,7 +112,7 @@
         out[year] = {}
         out[year][month] = {}
 
-        console.group(`Creating the grid for ${month}-${year}`)
+//        console.group(`Creating the grid for ${month}-${year}`)
 
         // First day of month to display
         const day = moment([year, month, 1])
@@ -153,42 +164,43 @@
 //        console.log(displayStartDate, displayEndDate)
 
         // Adding events
-        const years = Object.keys(out)
-        for (const index in this.$props.events) {
-          let eDate = null
-          let e = this.$props.events[index]
-          if (
-            e.type === 'task' &&
-            e.dueDate &&
-            e.dueDate.isBetween(displayStartDate, displayEndDate)
-          ) {
-            eDate = e.dueDate
-            // Add the task
-            out[eDate.year()][eDate.month()][eDate.date()].push(e)
-          } else if (
-            e.type === 'event' &&
-            e.startDate &&
-            e.endDate &&
-            (
-              e.startDate.isBetween(displayStartDate, displayEndDate) ||
-              e.endDate.isBetween(displayStartDate, displayEndDate)
-            )
-          ) {
+        if (this.$props.displayEvents) {
+          for (const index in this.$props.events) {
+            let eDate = null
+            let e = this.$props.events[index]
+            if (
+              e.type === 'task' &&
+              e.dueDate &&
+              e.dueDate.isBetween(displayStartDate, displayEndDate)
+            ) {
+              eDate = e.dueDate
+              // Add the task
+              out[eDate.year()][eDate.month()][eDate.date()].push(e)
+            } else if (
+              e.type === 'event' &&
+              e.startDate &&
+              e.endDate &&
+              (
+                e.startDate.isBetween(displayStartDate, displayEndDate) ||
+                e.endDate.isBetween(displayStartDate, displayEndDate)
+              )
+            ) {
 //            console.log(e.startDate.toString(), e.endDate.toString())
-            // Find days concerned by this event
-            // @todo this, but better
-            const startDay = e.startDate.clone().startOf('day')
-            const endDay = e.endDate.clone().endOf('day')
-            for (const y in out) {
-              if (e.startDate.year() == y || e.endDate.year() == y) {
-                for (const m in out[y]) {
-                  if (e.startDate.month() == m || e.endDate.month() == m) {
-                    // Days
-                    for (const d in out[y][m]) {
+              // Find days concerned by this event
+              // @todo this, but better
+              const startDay = e.startDate.clone().startOf('day')
+              const endDay = e.endDate.clone().endOf('day')
+              for (const y in out) {
+                if (e.startDate.year() == y || e.endDate.year() == y) {
+                  for (const m in out[y]) {
+                    if (e.startDate.month() == m || e.endDate.month() == m) {
+                      // Days
+                      for (const d in out[y][m]) {
 //                      console.log(e.startDate.format('YYYY-MM-DD'))
-                      if (moment([y, m, d]).hour(1).isBetween(startDay, endDay)) {
+                        if (moment([y, m, d]).hour(1).isBetween(startDay, endDay)) {
 //                        console.log('Found on ', d, e)
-                        out[y][m][d - 1].push(e)
+                          out[y][m][d - 1].push(e)
+                        }
                       }
                     }
                   }
@@ -198,12 +210,16 @@
           }
         }
 
-        console.groupEnd()
+//        console.groupEnd()
         this.processing = false
         this.grid = out
       },
       targetNow () {
         this.targetDate = moment()
+      },
+      isToday (date) {
+        date[2] = parseInt(date[2], 10) + 1
+        return this.today.isSame(date, 'day')
       }
     },
     created () {

@@ -43,6 +43,7 @@
       padding:0;
       display: flex;
       flex-wrap: wrap;
+      background-color: $cell-bg;
       /* One day cell */
       .day {
         width: calc(100% / 7 - 1px);
@@ -56,7 +57,16 @@
           text-decoration: none;
           color: blue;
         }
+        &.current-day{
+          .header{
+            font-weight:bold;
+          }
+        }
       }
+    }
+    .out-of-scope {
+      color: gray;
+      background-color: $cell-disabled-bg;
     }
   }
 }
