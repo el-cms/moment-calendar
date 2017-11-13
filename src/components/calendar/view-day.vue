@@ -50,11 +50,11 @@
 
 <script>
   import moment from 'moment'
-  import Task from '../calendar-widget/task'
-  import Event from '../calendar-widget/event'
+  import Task from '../calendar-widget/widget-task'
+  import Event from '../calendar-widget/widget-event'
 
   export default {
-    name: 'calendar-day-view',
+    name: 'calendar-view-day',
     props: {
       events: {required: false, type: Array, default: () => []},
       baseDay: {required: false, default: () => moment()}, // @todo Type ?

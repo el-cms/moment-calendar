@@ -43,32 +43,24 @@
       </template>
       <div v-else>Loading...</div>
     </div>
-    <!--<pre>{{events}}</pre>-->
-    <!--<pre>{{grid}}</pre>-->
   </div>
 </template>
 
 <script>
   import moment from 'moment'
-  import Task from '../calendar-widget/task'
-  import Event from '../calendar-widget/event'
+  import Task from '../calendar-widget/widget-task'
+  import Event from '../calendar-widget/widget-event'
 
   export default {
-    name: 'calendar-month-view',
+    name: 'calendar-view-month',
     props: {
       events: {required: false, type: Array, default: () => []},
       baseDay: {required: false, default: () => moment()}, // @todo Type ?
       displayLinks: {required: false, default: true, type: Boolean},
       displayEvents: {required: false, default: true, type: Boolean},
       displayDayNames: {required: false, default: true, type: Boolean}
-//      taskComponent: {required: false, default: null, type: Object},
-//      eventComponent: {required: false, default: null, type: Object}
     },
-    components: {
-//      Task: this.$props.taskComponent,
-//      Event: this.$props.eventComponent
-      Task, Event
-    },
+    components: {Task, Event},
     data () {
       const days = []
       // Building day names list
@@ -89,7 +81,6 @@
        */
       nextMonth () {
         const newMonth = this.targetDate.month() + 1
-//        console.log('> Next month: ', newMonth)
         this.targetDate = this.targetDate.month(newMonth)
         this.fillGrid()
       },
@@ -98,7 +89,6 @@
        */
       prevMonth () {
         const newMonth = this.targetDate.month() - 1
-//        console.log('> Prev month', newMonth)
         this.targetDate = this.targetDate.month(newMonth)
         this.fillGrid()
       },
@@ -111,8 +101,6 @@
         // Creating current year/month in results
         out[year] = {}
         out[year][month] = {}
-
-//        console.group(`Creating the grid for ${month}-${year}`)
 
         // First day of month to display
         const day = moment([year, month, 1])
@@ -139,9 +127,6 @@
           for (let i = dayInWeek - 1; i > 0; i--) {
             out[prevDayYear][prevDayMonth][moment(day).date(-i).date()] = []
           }
-
-          // Change of the start date
-//          displayStartDate = displayStartDate.subtract(`${dayInWeek - 1}d`)
         }
 
         // Fill the next days if needed:
@@ -157,11 +142,7 @@
           for (let i = 0; i < nextMonthDelta; i++) {
             out[nextMonthYear][nextMonthMonth][i] = []
           }
-          // Change the end date
-//          displayEndDate = displayEndDate.add(`${nextMonthDelta}d`)
         }
-
-//        console.log(displayStartDate, displayEndDate)
 
         // Adding events
         if (this.$props.displayEvents) {
@@ -185,7 +166,6 @@
                 e.endDate.isBetween(displayStartDate, displayEndDate)
               )
             ) {
-//            console.log(e.startDate.toString(), e.endDate.toString())
               // Find days concerned by this event
               // @todo this, but better
               const startDay = e.startDate.clone().startOf('day')
@@ -196,9 +176,7 @@
                     if (e.startDate.month() == m || e.endDate.month() == m) {
                       // Days
                       for (const d in out[y][m]) {
-//                      console.log(e.startDate.format('YYYY-MM-DD'))
                         if (moment([y, m, d]).hour(1).isBetween(startDay, endDay)) {
-//                        console.log('Found on ', d, e)
                           out[y][m][d - 1].push(e)
                         }
                       }
@@ -210,7 +188,6 @@
           }
         }
 
-//        console.groupEnd()
         this.processing = false
         this.grid = out
       },

@@ -23,9 +23,9 @@
 
 <script>
   import moment from 'moment'
-  import DayView from './components/calendar/DayView'
-  import MonthView from './components/calendar/MonthView'
-  import WeekView from './components/calendar/WeekView'
+  import DayView from './components/calendar/view-day'
+  import MonthView from './components/calendar/view-month'
+  import WeekView from './components/calendar/view-week'
 
   import fake from './fakeApi'
 
