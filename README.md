@@ -1,8 +1,24 @@
 # calendar
 
-> A full calendar suite for VueJS
+> A calendar suite for VueJS
 
-## Build Setup
+## Full description:
+
+Calendar components with logic based on moment.js
+
+- Month view
+- Week view
+- Day view
+- Events
+- Tasks
+- Styled with Sass
+
+## Install and use
+
+_Work in progress_
+
+## Running the demo
+Clone this repo and follow the steps below:
 
 ``` bash
 # install dependencies
@@ -18,4 +34,10 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Documentation
+For now, you should use the online documentation (_work in progress_) or
+browse the 'docs' folder.
+## Build documentation
+Documentation is generated with Vue-Styleguidist. Once the dependencies
+installed, you can start the dev server with `npm run styleguide` and you
+can build the documentation with `npm run styleguide:build`.
