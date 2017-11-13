@@ -8,15 +8,18 @@
       <div class="link">
         <button @click="targetNow()">Today</button>
       </div>
+      <!-- Header -->
       <div class="header">
         <span class="string">Displayed day:</span>
         {{targetDate.format('dd, LL')}}
       </div>
+      <!-- /Header -->
+
       <div class="link">
         <button @click="nextDay()">&gt;</button>
       </div>
     </div>
-
+    <!-- /Navigation links -->
 
     <!-- Full-day events -->
     <div class="mc-full-day-events" v-if="grid.fullDayEvents.length > 0">
@@ -27,6 +30,7 @@
                    :is="e.type === 'event' ? 'Event' : 'Task'"></component>
       </div>
     </div>
+    <!-- /Full-day events -->
 
     <!-- Time ruler -->
     <div class="ruler" :style="rulerStyle"></div>
@@ -43,21 +47,38 @@
                    :is="e.type === 'event' ? 'Event' : 'Task'"></component>
       </div>
     </div>
+    <!-- /Hours -->
 
-    <pre>{{grid}}</pre>
   </div>
 </template>
 
 <script>
   import moment from 'moment'
-  import Task from '../calendar-widget/task'
-  import Event from '../calendar-widget/event'
+  import Task from '../calendar-widget/widget-task'
+  import Event from '../calendar-widget/widget-event'
 
+  /**
+   * Calendar : Day view
+   *
+   * Displays a one-day view with events and tasks
+   */
   export default {
-    name: 'calendar-day-view',
+    name: 'calendar-view-day',
     props: {
+      /**
+       * Event list
+       */
       events: {required: false, type: Array, default: () => []},
-      baseDay: {required: false, default: () => moment()}, // @todo Type ?
+      /**
+       * First day to display when component is loaded.
+       * Should be a moment object
+       */
+      baseDay: {required: false, default: () => moment(), type: Object}, // @todo How to check for a moment object ?
+      /**
+       * Flag to display or not the navigation links allowing to change the day
+       *
+       * Note: setting this to false will also remove the day name.
+       */
       displayLinks: {required: false, default: true, type: Boolean}
     },
     components: {Task, Event},
@@ -72,7 +93,7 @@
     },
     methods: {
       /**
-       * Fills the grid for next day
+       * Changes the current day and updates the grid
        */
       nextDay () {
         const newDay = this.targetDate.day() + 1
@@ -80,13 +101,16 @@
         this.fillGrid()
       },
       /**
-       * Fills the grid for previous day
+       * Changes the current day and updates the grid
        */
       prevDay () {
         const newDay = this.targetDate.day() - 1
         this.targetDate = this.targetDate.day(newDay)
         this.fillGrid()
       },
+      /**
+       * Creates the grid and prepares the events list
+       */
       fillGrid () {
         const baseDay = this.$props.baseDay
         const out = {}

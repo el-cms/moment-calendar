@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: 'calendar-week-view',
+    name: 'calendar-view-week',
     data () {
       return {}
     }

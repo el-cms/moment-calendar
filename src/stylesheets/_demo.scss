@@ -3,5 +3,14 @@
 }
 
 body {
+  margin: 0;
   font-family: sans-serif;
+  padding: 0 15px;
+}
+
+.debug {
+  margin: 15px 0;
+  padding: 15px;
+  opacity: .8;
+  background-color: #DDD;
 }
