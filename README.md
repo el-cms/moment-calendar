@@ -7,6 +7,9 @@
 Check the [ROADMAP.md](ROADMAP.md) file for upcoming features.
 
 Check the [issues](https://github.com/el-cms/moment-calendar/issues) for problems.
+## Links:
+- [Demo](http://vue2-mcalendar.experimentslabs.com/)
+- [Documentation](http://vue2-mcalendar.experimentslabs.com/doc)
 
 ## Full description:
 

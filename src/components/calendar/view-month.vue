@@ -156,7 +156,7 @@
             ) {
               eDate = e.dueDate
               // Add the task
-              out[eDate.year()][eDate.month()][eDate.date()].push(e)
+              out[eDate.year()][eDate.month()][eDate.date() - 1].push(e)
             } else if (
               e.type === 'event' &&
               e.startDate &&
@@ -171,9 +171,9 @@
               const startDay = e.startDate.clone().startOf('day')
               const endDay = e.endDate.clone().endOf('day')
               for (const y in out) {
-                if (e.startDate.year() == y || e.endDate.year() == y) {
+                if (e.startDate.year() === parseInt(y, 10) || e.endDate.year() === parseInt(y, 10)) {
                   for (const m in out[y]) {
-                    if (e.startDate.month() == m || e.endDate.month() == m) {
+                    if (e.startDate.month() === parseInt(m, 10) || e.endDate.month() === parseInt(m, 10)) {
                       // Days
                       for (const d in out[y][m]) {
                         if (moment([y, m, d]).hour(1).isBetween(startDay, endDay)) {

@@ -1,23 +1,39 @@
 <template>
   <div id="app">
-    <ul>
-      <li>
-        <button @click="view = 'DayView'">Day</button>
-      </li>
-      <li>
-        <button @click="view = 'WeekView'">Week</button>
-      </li>
-      <li>
-        <button @click="view = 'MonthView'">Month</button>
-      </li>
-    </ul>
-
-    <pre>
+    <!-- Debug -->
+    <div class="debug">
+      <div>
+        <h1>VueJS calendar components based on <a href="https://http://momentjs.com" target="_blank">moment.js</a></h1>
+        <small><code>Version : Not even 0</code> &dash;
+          Work in progress.
+          <a href="https://github.com/el-cms/moment-calendar">Github</a>
+          <a href="https://github.com/el-cms/moment-calendar/issues">Issues</a>
+          <a href="http://vue2-mcalendar.experimentslabs.com/doc">Documentation</a>
+          &dash; <strong>Not even a NPM package for now</strong>
+        </small>
+      </div>
+      <hr>
+      Display as :
+      <button @click="view = 'DayView'">Day</button>
+      <button @click="view = 'WeekView'">Week</button>
+      <button @click="view = 'MonthView'">Month</button>
+      <pre>
        Today: {{today}}
     Base day: {{refDay.format('YYYY-MM-DD')}}
       </pre>
+    </div>
+    <!-- /Debug -->
+
+    <!-- Actual calendar, called with a custom component so the views
+         can be changed from here. -->
     <component :is="view" :events="data" @viewDay="changeView" :baseDay="refDay"></component>
-    <pre>{{data}}</pre>
+
+    <!-- Sample data -->
+    <div class="debug">
+      Dataset:
+      <pre>{{data}}</pre>
+    </div>
+
   </div>
 </template>
 
