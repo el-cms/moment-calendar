@@ -23,6 +23,7 @@
             <a @click="displayView = 'month'" :class="{active:displayView === 'month'}">Month</a>
             <a @click="displayView = 'week'" :class="{active:displayView === 'week'}">Week</a>
             <a @click="displayView = 'day'" :class="{active:displayView === 'day'}">Day</a>
+            <a @click="displayView = 'multiday'" :class="{active:displayView === 'multiday'}">X Day</a>
             <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Small</a>
             <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Combined</a>
             <a @click="displayView = 'picker'" :class="{active:displayView === 'picker'}" disabled>Picker</a>
@@ -126,16 +127,18 @@
                   :taskComponent="taskComponent"
                   :eventComponent="eventComponent"></month-view>
     </div>
-    <!-- Month view only -->
+
+    <!-- Week view only -->
     <div class="demo-container" v-if="displayView === 'week'">
       <div class="description">
         <code>components/calendar/view-week.vue</code>
       </div>
       <week-view :events="data" :baseDay="refDay"
-                :taskComponent="taskComponent"
-                :eventComponent="eventComponent"></week-view>
+                 :taskComponent="taskComponent"
+                 :eventComponent="eventComponent"></week-view>
     </div>
-    <!-- Month view only -->
+
+    <!-- Day view only -->
     <div class="demo-container" v-if="displayView === 'day'">
       <div class="description">
         <code>components/calendar/view-day.vue</code>
@@ -144,6 +147,18 @@
                 :taskComponent="taskComponent"
                 :eventComponent="eventComponent"></day-view>
     </div>
+
+    <!-- Multiple days only -->
+    <div class="demo-container" v-if="displayView === 'multiday'">
+      <div class="description">
+        <code>components/calendar/view-multiday.vue</code>
+      </div>
+      <multiday-view :data="multidata"
+                     :baseDay="refDay"
+                     :taskComponent="taskComponent"
+                     :eventComponent="eventComponent"></multiday-view>
+    </div>
+
     <!-- Small calendar view -->
     <div class="demo-container" v-if="displayView === 'small'">
       <div class="description">
@@ -167,6 +182,7 @@
   import moment from 'moment'
   // Base components
   import DayView from './components/calendar/view-day'
+  import MultidayView from './components/calendar/view-multiday'
   import MonthView from './components/calendar/view-month'
   import WeekView from './components/calendar/view-week'
   import DynamicView from './components/calendar/view-dynamic'
@@ -180,11 +196,12 @@
 
   export default {
     name: 'app',
-    components: {DayView, WeekView, MonthView, DynamicView, CustomTask, CustomEvent},
+    components: {DayView, MultidayView, WeekView, MonthView, DynamicView, CustomTask, CustomEvent},
     data () {
       return {
         view: MonthView,
         data: fake.get(),
+        multidata: fake.getMultiple(),
         refDay: moment(),
         today: moment(),
         inputs: {

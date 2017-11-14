@@ -114,4 +114,32 @@
       }
     }
   }
+  &--multi-days {
+    /* Day names */
+    .#{$prefix}-headers {
+      display: flex;
+      width: 100%;
+      .day {
+        width: calc(100% / 7);
+        text-align: center;
+        padding: .5em;
+      }
+    }
+    /* List of all days */
+    .#{$prefix}-days {
+      padding: 0;
+      display: flex;
+      flex-wrap: nowrap;
+      background-color: $cell-bg;
+      overflow-x: scroll;
+      /* One day col */
+      .#{$prefix}-cal-view {
+        &--day {
+          width: calc(100% / 3 - 1px);
+          min-width: calc(100% / 3 - 1px);
+          max-width: calc(100% / 3 - 1px);
+        }
+      }
+    }
+  }
 }

@@ -1,9 +1,6 @@
 .#{$prefix}-cal-view {
   /* Event */
   .#{$prefix}-event {
-    @mixin time-length($duration) {
-
-    }
     font-size: .8em;
     border: 1px solid black;
     padding: .3em .5em;

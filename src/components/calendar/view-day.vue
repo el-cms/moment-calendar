@@ -183,6 +183,10 @@
       this.rulerStyle = `top:calc(50px * ${this.today.hour()})`
     },
     watch: {
+      baseDay (newDate) {
+        this.targetDate = newDate
+        this.fillGrid()
+      },
       events () {
         this.fillGrid()
       }
