@@ -108,6 +108,10 @@
         this.targetDate = this.targetDate.day(newDay)
         this.fillGrid()
       },
+      targetNow () {
+        this.targetDate = moment()
+        this.fillGrid()
+      },
       /**
        * Creates the grid and prepares the events list
        */
@@ -174,6 +178,11 @@
     created () {
       this.fillGrid()
       this.rulerStyle = `top:calc(50px * ${this.today.hour()})`
+    },
+    watch: {
+      events () {
+        this.fillGrid()
+      }
     }
   }
 </script>

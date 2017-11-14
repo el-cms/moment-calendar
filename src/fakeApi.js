@@ -1,11 +1,14 @@
 import moment from 'moment'
 
+const randomChar = (size = 5) => Math.random().toString(36).substr(2, size)
+
 export default {
   get () {
     return [
-      {type: 'task', title: 'First task', dueDate: moment('2017-11-12 22:00')},
-      {type: 'task', title: 'First task', dueDate: moment('2017-11-12 00:00')},
+      {id: randomChar(), type: 'task', title: 'First task', dueDate: moment('2017-11-12 22:00')},
+      {id: randomChar(), type: 'task', title: 'First task', dueDate: moment('2017-11-12 00:00')},
       {
+        id: randomChar(),
         type: 'event',
         title: 'First event',
         startDate: moment('2017-11-12 10:00'),
@@ -13,6 +16,7 @@ export default {
         fullDay: false
       },
       {
+        id: randomChar(),
         type: 'event',
         title: 'First event',
         startDate: moment('2017-11-12 10:00'),
@@ -20,6 +24,7 @@ export default {
         fullDay: false
       },
       {
+        id: randomChar(),
         type: 'event',
         title: 'Full day event',
         startDate: moment('2017-11-12 10:00'),
@@ -27,6 +32,7 @@ export default {
         fullDay: true
       },
       {
+        id: randomChar(),
         type: 'event',
         title: '30 minutes',
         startDate: moment('2017-11-12 10:00'),
@@ -34,7 +40,7 @@ export default {
         fullDay: false
       },
       {
-        id: 4,
+        id: randomChar(),
         type: 'event',
         title: 'Too long',
         startDate: moment('2017-11-12 10:00'),

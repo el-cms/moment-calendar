@@ -1,16 +1,47 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: sans-serif;
-  padding: 0 15px;
-}
+$base-font-size: 1rem;
+@import "~knacss/sass/knacss";
 
 .debug {
-  margin: 15px 0;
+  margin-bottom: $small-value;
   padding: 15px;
-  opacity: .8;
   background-color: #DDD;
+  .links {
+    a {
+      text-align: center;
+      flex-grow: 1;
+      cursor: pointer;
+      padding: $small-value;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.active {
+  background-color: lightblue;
+}
+
+hr {
+  margin: $small-value 0;
+}
+
+input {
+  border: 1px solid gray;
+  background-color: transparent;
+  display: block;
+  &[type="checkbox"] {
+    display: inline;
+  }
+}
+
+.demo-container {
+  border: 1px dashed gray;
+  padding: $small-value;
+  .description {
+    border-bottom: 1px dashed lightgrey;
+    background-color: #EEE;
+    margin: (-$small-value) (-$small-value) $small-value (-$small-value);
+    padding: $small-value;
+  }
 }
