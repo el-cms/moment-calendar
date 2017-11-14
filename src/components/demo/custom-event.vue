@@ -3,19 +3,30 @@
 </template>
 
 <script>
+  /**
+   * Example for a custom event widget
+   */
   export default {
     name: 'custom-widget-event',
     props: {
+      /**
+       * Event data
+       */
       data: {required: true, type: Object, default: () => ({})}
     },
-    data () {
-      return {}
-    },
     computed: {
+      /**
+       * Event duration, in hours
+       * @returns {number}
+       */
       duration () {
         const d = this.$props.data
         return Math.round(d.endDate.diff(d.startDate) / 1000 / 60 / 60)
       },
+      /**
+       * Determines the css class, based on the event length
+       * @returns {String}
+       */
       cssClass () {
         const d = this.duration
         const start = this.$props.data.startDate.hour()

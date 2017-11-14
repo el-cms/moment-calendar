@@ -1,4 +1,24 @@
+$base-font-size: 1rem;
+@import "~knacss/sass/knacss";
+
 // Components styles
 @import "variables";
 @import "views";
 @import "widgets";
+
+
+// custom styles
+table[class^="rsg--table"]{
+  th, td{
+    &:first-child{
+      width: 150px;
+    }
+    //&:nth-child(3){
+    //  width:100px;
+    //}
+    //&:last-child{
+    //  min-width:400px;
+    //}
+  //  width: auto;
+  }
+}

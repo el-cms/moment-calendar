@@ -24,6 +24,7 @@
             <a @click="displayView = 'week'" :class="{active:displayView === 'week'}">Week</a>
             <a @click="displayView = 'day'" :class="{active:displayView === 'day'}">Day</a>
             <a @click="displayView = 'multiday'" :class="{active:displayView === 'multiday'}">X Day</a>
+            <a @click="displayView = 'multiweek'" :class="{active:displayView === 'multiweek'}">X Day/week</a>
             <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Small</a>
             <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Combined</a>
             <a @click="displayView = 'picker'" :class="{active:displayView === 'picker'}" disabled>Picker</a>
@@ -114,7 +115,7 @@
       <!-- Actual calendar, called with a custom component so the views
            can be changed from here. -->
       <dynamic-view :events="data"
-                    :baseDay="refDay"
+                    :base-day="refDay"
       ></dynamic-view>
     </div>
 
@@ -123,9 +124,10 @@
       <div class="description">
         <code>components/calendar/view-month.vue</code>
       </div>
-      <month-view :events="data" :baseDay="refDay"
-                  :taskComponent="taskComponent"
-                  :eventComponent="eventComponent"></month-view>
+      <month-view :events="data"
+                  :base-day="refDay"
+                  :task-component="taskComponent"
+                  :event-component="eventComponent"></month-view>
     </div>
 
     <!-- Week view only -->
@@ -133,9 +135,10 @@
       <div class="description">
         <code>components/calendar/view-week.vue</code>
       </div>
-      <week-view :events="data" :baseDay="refDay"
-                 :taskComponent="taskComponent"
-                 :eventComponent="eventComponent"></week-view>
+      <week-view :events="data"
+                 :base-day="refDay"
+                 :task-component="taskComponent"
+                 :event-component="eventComponent"></week-view>
     </div>
 
     <!-- Day view only -->
@@ -143,9 +146,10 @@
       <div class="description">
         <code>components/calendar/view-day.vue</code>
       </div>
-      <day-view :events="data" :baseDay="refDay"
-                :taskComponent="taskComponent"
-                :eventComponent="eventComponent"></day-view>
+      <day-view :events="data"
+                :base-day="refDay"
+                :task-component="taskComponent"
+                :event-component="eventComponent"></day-view>
     </div>
 
     <!-- Multiple days only -->
@@ -154,9 +158,20 @@
         <code>components/calendar/view-multiday.vue</code>
       </div>
       <multiday-view :data="multidata"
-                     :baseDay="refDay"
-                     :taskComponent="taskComponent"
-                     :eventComponent="eventComponent"></multiday-view>
+                     :base-day="refDay"
+                     :task-component="taskComponent"
+                     :event-component="eventComponent"></multiday-view>
+    </div>
+    <!-- Week view with multiple persons -->
+    <div class="demo-container" v-if="displayView === 'multiweek'">
+      <div class="description">
+        <code>components/calendar/view-week.vue</code>
+      </div>
+      <week-view :data="multidata"
+                 :base-day="refDay"
+                 :day-component="MultidayView"
+                 :task-component="taskComponent"
+                 :event-component="eventComponent"></week-view>
     </div>
 
     <!-- Small calendar view -->
@@ -210,7 +225,9 @@
         },
         displayView: 'dynamic',
         showDataset: false,
-        useCustomComponents: false
+        useCustomComponents: false,
+        // Needed to pass to the multi-day/week view
+        MultidayView
       }
     },
     computed: {

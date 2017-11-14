@@ -111,6 +111,12 @@
             }
           }
         }
+        &--multi-days {
+          margin-right: 1em;
+          //#{$prefix}-cal-view--day{
+          //  min-width: calc(100vh / 3 - 1em);
+          //}
+        }
       }
     }
   }
@@ -135,9 +141,9 @@
       /* One day col */
       .#{$prefix}-cal-view {
         &--day {
-          width: calc(100% / 3 - 1px);
-          min-width: calc(100% / 3 - 1px);
-          max-width: calc(100% / 3 - 1px);
+          width: calc(100vw / 3 - 1px);
+          min-width: calc(100vw / 3 - 1px);
+          max-width: calc(100vw / 3 - 1px);
         }
       }
     }

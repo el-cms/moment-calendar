@@ -45,9 +45,105 @@ npm run build --report
 
 ## Documentation
 For now, you should use the online documentation (_work in progress_) or
-browse the 'doccumentation' folder.
+browse the 'documentation' folder.
+
+## Events format
+When a component have an `events` props, it means a list of events and tasks.
+
+```js
+var events = [
+  { /* event 1 */ },
+  { /* task 1 */ },
+  { /* task 2 */ },
+  { /* event 2 */ },
+  { /* event 3 */ },
+  { /* event 4 */ },
+  // ...
+]
+```
+
+### Tasks format
+Base task format:
+
+```js
+var task = {
+  id: 10,                 // Some unique key
+  type: 'task',           // Required
+  title: 'A nice title',
+  dueDate: moment(),      // A moment object
+  done: true
+}
+```
+
+### Events format
+Base events format:
+
+```js
+var event = {
+  id: 10,                 // Some unique key
+  type: 'event',          // Required
+  title: 'A nice title',
+  startDate: moment(),    // A moment object
+  endDateDate: moment(),  // A moment object
+  fullDay: true           // True if the event is all day long
+}
+```
+
+### Custom formats
+If you need to use other properties (i.e. : description), you're welcome
+to do so, but you'll need to create your own task/event component to be
+able to display them.
+
+## Multiple events format
+When a component have an `data` props, it means a dictionary of list of
+events and tasks...
+
+It's used in components that displays calendars for different things
+
+```js
+var data = {
+  'Pinhead': [
+    { /* event 1 */ },
+    { /* task 1 */ },
+    { /* task 2 */ },
+    { /* event 2 */ },
+    { /* event 3 */ },
+    { /* event 4 */ },
+  ],
+  'Jason Voorhees': [
+    { /* event 1 */ },
+    { /* task 1 */ },
+    { /* task 2 */ },
+    { /* event 2 */ },
+    { /* event 3 */ },
+    { /* event 4 */ },
+  ],
+}
+```
+
+## Localization
+You can change the locale globally using `moment.locale()` in your `main.js`
+file:
+```js
+// Other imports
+import moment from 'moment'
+
+moment.locale('fr')
+
+// Code and Vue initialization
+````
+
+## Styling
+### Principle
+### Examples with mainstream css frameworks
+
+## Custom elements
+### Custom tasks and events
+### Custom days
 
 ## Build documentation
-Documentation is generated with Vue-Styleguidist. Once the dependencies
-installed, you can start the dev server with `npm run styleguide` and you
-can build the documentation with `npm run styleguide:build`.
+Component documentation is generated with
+[Vue-Styleguidist](https://github.com/vue-styleguidist/vue-styleguidist).
+Once the dependencies installed, you can start the dev server with
+`npm run styleguide` and you can build the documentation with
+`npm run styleguide:build`.

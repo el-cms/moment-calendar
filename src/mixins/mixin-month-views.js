@@ -1,14 +1,19 @@
 import moment from 'moment'
 
+/**
+ * @mixin
+ */
 export default {
   methods: {
     /**
-     * Creates an grid to be displayed in month views
+     * Creates a grid to be displayed in month views
      *
      * @param {Object}     targetDate - Moment object for the targeted date
      * @param {Array|null} events     - List of events or null
+     * @public
      */
     fillGrid (targetDate, events = null) {
+      this.processing = true
       this.grid = {}
       const out = {}
       const year = targetDate.year()   // Year
@@ -102,7 +107,7 @@ export default {
           }
         }
       }
-
+      this.processing = false
       return out
     }
   }
