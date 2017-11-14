@@ -28,6 +28,16 @@
             <a @click="displayView = 'picker'" :class="{active:displayView === 'picker'}" disabled>Picker</a>
           </div>
         </div>
+        <div>
+          <strong>Custom components:</strong>
+          <div>
+            <label for="cst-component">
+              <input type="checkbox" :value="true" name="cst-component" id="cst-component"
+                     v-model="useCustomComponents">
+              Custom components
+            </label>
+          </div>
+        </div>
       </div>
       <!-- /Debug -->
 
@@ -96,6 +106,9 @@
         <p>
           Use this "as is" or as an example to build your own dynamic calendar component.
         </p>
+        <p>
+          Note: there is no custom component used in this one.
+        </p>
       </div>
       <!-- Actual calendar, called with a custom component so the views
            can be changed from here. -->
@@ -109,7 +122,9 @@
       <div class="description">
         <code>components/calendar/view-month.vue</code>
       </div>
-      <month-view :events="data" :baseDay="refDay"></month-view>
+      <month-view :events="data" :baseDay="refDay"
+                  :taskComponent="taskComponent"
+                  :eventComponent="eventComponent"></month-view>
     </div>
     <!-- Month view only -->
     <div class="demo-container" v-if="displayView === 'week'">
@@ -120,7 +135,9 @@
       <div class="description">
         <code>components/calendar/view-day.vue</code>
       </div>
-      <day-view :events="data" :baseDay="refDay"></day-view>
+      <day-view :events="data" :baseDay="refDay"
+                :taskComponent="taskComponent"
+                :eventComponent="eventComponent"></day-view>
     </div>
     <!-- Small calendar view -->
     <div class="demo-container" v-if="displayView === 'small'">
@@ -143,18 +160,22 @@
 
 <script>
   import moment from 'moment'
+  // Base components
   import DayView from './components/calendar/view-day'
   import MonthView from './components/calendar/view-month'
   import WeekView from './components/calendar/view-week'
   import DynamicView from './components/calendar/view-dynamic'
-
+  // Custom elements
+  import CustomTask from './components/demo/custom-task'
+  import CustomEvent from './components/demo/custom-event'
+  // Fake data
   import fake from './fakeApi'
 
   const randomChar = (size = 5) => Math.random().toString(36).substr(2, size)
 
   export default {
     name: 'app',
-    components: {DayView, WeekView, MonthView, DynamicView},
+    components: {DayView, WeekView, MonthView, DynamicView, CustomTask, CustomEvent},
     data () {
       return {
         view: MonthView,
@@ -166,7 +187,16 @@
           task: this.resetTask()
         },
         displayView: 'dynamic',
-        showDataset: false
+        showDataset: false,
+        useCustomComponents: false
+      }
+    },
+    computed: {
+      taskComponent () {
+        return this.useCustomComponents ? CustomTask : undefined
+      },
+      eventComponent () {
+        return this.useCustomComponents ? CustomEvent : undefined
       }
     },
     methods: {

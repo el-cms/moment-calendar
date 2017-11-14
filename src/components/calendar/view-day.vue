@@ -44,7 +44,7 @@
         <component v-for="e, index in events"
                    :data="e"
                    :key="index"
-                   :is="e.type === 'event' ? 'Event' : 'Task'"></component>
+                   :is="e.type === 'event' ? eventComponent : taskComponent"></component>
       </div>
     </div>
     <!-- /Hours -->
@@ -79,7 +79,9 @@
        *
        * Note: setting this to false will also remove the day name.
        */
-      displayLinks: {required: false, default: true, type: Boolean}
+      displayLinks: {required: false, default: true, type: Boolean},
+      taskComponent: {required: false, default: () => Task, type: Object}, // @todo exact type ?
+      eventComponent: {required: false, default: () => Event, type: Object} // @todo exact type ?
     },
     components: {Task, Event},
     data () {

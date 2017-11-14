@@ -36,7 +36,7 @@
               <component v-for="e, index in d"
                          :data="e"
                          :key="index"
-                         :is="e.type === 'event' ? 'Event' : 'Task'"></component>
+                         :is="e.type === 'event' ? $props.eventComponent : taskComponent"></component>
             </div>
           </div>
         </template>
@@ -60,7 +60,9 @@
       baseDay: {required: false, default: () => moment()}, // @todo Type ?
       displayLinks: {required: false, default: true, type: Boolean},
       displayEvents: {required: false, default: true, type: Boolean},
-      displayDayNames: {required: false, default: true, type: Boolean}
+      displayDayNames: {required: false, default: true, type: Boolean},
+      taskComponent: {required: false, default: () => Task, type: Object}, // @todo exact type ?
+      eventComponent: {required: false, default: () => Event, type: Object} // @todo exact type ?
     },
     components: {Task, Event},
     data () {
