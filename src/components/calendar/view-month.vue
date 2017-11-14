@@ -9,7 +9,6 @@
         <button @click="targetNow()">Current month</button>
       </div>
       <div class="header">
-        <span class="string">Displayed month:</span>
         {{targetDate.format('YYYY, MMMM')}}
       </div>
       <div class="link">

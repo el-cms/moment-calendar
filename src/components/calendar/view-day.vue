@@ -10,7 +10,6 @@
       </div>
       <!-- Header -->
       <div class="header">
-        <span class="string">Displayed day:</span>
         {{targetDate.format('dd, LL')}}
       </div>
       <!-- /Header -->
