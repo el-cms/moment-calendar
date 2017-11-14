@@ -42,6 +42,9 @@
   import moment from 'moment'
   import DayView from './view-day'
 
+  /**
+   * Displays events on a week
+   */
   export default {
     name: 'calendar-view-week',
     components: {DayView},
@@ -62,7 +65,8 @@
        */
       displayLinks: {required: false, default: true, type: Boolean},
       taskComponent: {required: false, default: () => undefined, type: Object}, // @todo exact type ?
-      eventComponent: {required: false, default: () => undefined, type: Object} // @todo exact type ?
+      eventComponent: {required: false, default: () => undefined, type: Object}, // @todo exact type ?
+      dayComponent: {required: false, default: () => DayView, type: Object} // @todo exact type ?
     },
     data () {
       return {
@@ -78,43 +82,42 @@
        */
       nextWeek () {
         const newDay = this.targetDate.day() + 7
-        this.targetDate = this.targetDate.day(newDay)
-        this.fillGrid()
+        this.targetDate = this.targetDate.day(newDay).clone()
+        this.grid = this.fillGrid()
       },
       /**
        * Changes the current day and updates the grid
        */
       prevWeek () {
         const newDay = this.targetDate.day() - 7
-        this.targetDate = this.targetDate.day(newDay)
-        this.fillGrid()
+        this.targetDate = this.targetDate.day(newDay).clone()
+        this.grid = this.fillGrid()
       },
       targetNow () {
-        this.targetDate = moment()
-        this.fillGrid()
+        this.targetDate = moment().clone()
+        this.grid = this.fillGrid()
       },
       /**
        * Creates the grid and prepares the events list
        */
       fillGrid () {
-        const baseDay = this.$props.baseDay.clone()
+        const baseDay = this.targetDate.clone().startOf('week')
         const out = []
 
         // Create the week
         for (var i = 0; i < 7; i++) {
-          out.push(baseDay.add(i, 'day').clone())
+          out.push(baseDay.add(1, 'day').clone())
         }
 
-        this.grid = out
+        return out
       }
     },
     created () {
-      this.fillGrid()
-      this.rulerStyle = `top:calc(50px * ${this.today.hour()})`
+      this.grid = this.fillGrid()
     },
     watch: {
       events () {
-        this.fillGrid()
+        this.grid = this.fillGrid()
       }
     }
   }
