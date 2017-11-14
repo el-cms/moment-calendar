@@ -31,7 +31,7 @@
                   :display-links="false"
                   :task-component="eventComponent"
                   :event-component="eventComponent"
-                  :header-Format="`[${index}]`"
+                  :header-format="`[${index}]`"
                   :key="index"
                   v-for="e, index in data"></day-widget>
       <!--Days -->
