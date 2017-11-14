@@ -21,7 +21,7 @@
           <div class="links grid has-gutter">
             <a @click="displayView = 'dynamic'" :class="{active:displayView === 'dynamic'}">Dynamic</a>
             <a @click="displayView = 'month'" :class="{active:displayView === 'month'}">Month</a>
-            <a @click="displayView = 'week'" :class="{active:displayView === 'week'}" disabled>Week</a>
+            <a @click="displayView = 'week'" :class="{active:displayView === 'week'}">Week</a>
             <a @click="displayView = 'day'" :class="{active:displayView === 'day'}">Day</a>
             <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Small</a>
             <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Combined</a>
@@ -128,7 +128,12 @@
     </div>
     <!-- Month view only -->
     <div class="demo-container" v-if="displayView === 'week'">
-
+      <div class="description">
+        <code>components/calendar/view-week.vue</code>
+      </div>
+      <week-view :events="data" :baseDay="refDay"
+                :taskComponent="taskComponent"
+                :eventComponent="eventComponent"></week-view>
     </div>
     <!-- Month view only -->
     <div class="demo-container" v-if="displayView === 'day'">

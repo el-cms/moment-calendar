@@ -40,7 +40,7 @@
     }
     /* List of all days */
     .#{$prefix}-days {
-      padding:0;
+      padding: 0;
       display: flex;
       flex-wrap: wrap;
       background-color: $cell-bg;
@@ -53,13 +53,13 @@
         border-width: 0 0 1px 1px;
         padding: .5em;
         overflow: hidden;
-        .header{
+        .header {
           text-decoration: none;
           color: blue;
         }
-        &.current-day{
-          .header{
-            font-weight:bold;
+        &.current-day {
+          .header {
+            font-weight: bold;
           }
         }
       }
@@ -67,6 +67,51 @@
     .out-of-scope {
       color: gray;
       background-color: $cell-disabled-bg;
+    }
+  }
+  &--week {
+    /* Day names */
+    .#{$prefix}-headers {
+      display: flex;
+      width: 100%;
+      .day {
+        width: calc(100% / 7);
+        text-align: center;
+        padding: .5em;
+      }
+    }
+    /* List of all days */
+    .#{$prefix}-days {
+      padding: 0;
+      display: flex;
+      flex-wrap: nowrap;
+      background-color: $cell-bg;
+      overflow-x: scroll;
+      /* One day cell */
+      .#{$prefix}-cal-view {
+        &--day {
+          width: calc(100% / 3 - 1px);
+          min-width: calc(100% / 3 - 1px);
+          amx-width: calc(100% / 3 - 1px);
+          .day {
+            min-height: 8em;
+            height: 8em;
+            border: 1px solid lightgray;
+            border-width: 0 0 1px 1px;
+            padding: .5em;
+            overflow: hidden;
+            .header {
+              text-decoration: none;
+              color: blue;
+            }
+            &.current-day {
+              .header {
+                font-weight: bold;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -1,20 +1,20 @@
 <template>
   <div class="mc-cal-view mc-cal-view--day">
     <!-- Navigation links -->
-    <div class="mc-cal-links" v-if="displayLinks">
-      <div class="link">
+    <div class="mc-cal-links" v-if="displayHeaders">
+      <div class="link" v-if="displayLinks">
         <button @click="prevDay()">&lt;</button>
       </div>
-      <div class="link">
+      <div class="link" v-if="displayLinks">
         <button @click="targetNow()">Today</button>
       </div>
       <!-- Header -->
       <div class="header">
-        {{targetDate.format('dd, LL')}}
+        {{targetDate.format(headerFormat)}}
       </div>
       <!-- /Header -->
 
-      <div class="link">
+      <div class="link" v-if="displayLinks">
         <button @click="nextDay()">&gt;</button>
       </div>
     </div>
@@ -26,7 +26,7 @@
         <component v-for="e, index in grid.fullDayEvents"
                    :data="e"
                    :key="index"
-                   :is="e.type === 'event' ? 'Event' : 'Task'"></component>
+                   :is="e.type === 'event' ? eventComponent : taskComponent"></component>
       </div>
     </div>
     <!-- /Full-day events -->
@@ -53,8 +53,8 @@
 
 <script>
   import moment from 'moment'
-  import Task from '../calendar-widget/widget-task'
-  import Event from '../calendar-widget/widget-event'
+  import TaskWidget from '../calendar-widget/widget-task'
+  import EventWidget from '../calendar-widget/widget-event'
 
   /**
    * Calendar : Day view
@@ -63,6 +63,7 @@
    */
   export default {
     name: 'calendar-view-day',
+    components: {TaskWidget, EventWidget},
     props: {
       /**
        * Event list
@@ -79,10 +80,11 @@
        * Note: setting this to false will also remove the day name.
        */
       displayLinks: {required: false, default: true, type: Boolean},
-      taskComponent: {required: false, default: () => Task, type: Object}, // @todo exact type ?
-      eventComponent: {required: false, default: () => Event, type: Object} // @todo exact type ?
+      displayHeaders: {required: false, default: true, type: Boolean},
+      taskComponent: {required: false, default: () => TaskWidget, type: Object}, // @todo exact type ?
+      eventComponent: {required: false, default: () => EventWidget, type: Object}, // @todo exact type ?
+      headerFormat: {required: false, default: 'dd, LL', type: String}
     },
-    components: {Task, Event},
     data () {
       return {
         targetDate: this.$props.baseDay,

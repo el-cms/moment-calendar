@@ -47,23 +47,23 @@
 
 <script>
   import moment from 'moment'
-  import Task from '../calendar-widget/widget-task'
-  import Event from '../calendar-widget/widget-event'
+  import TaskWidget from '../calendar-widget/widget-task'
+  import EventWidget from '../calendar-widget/widget-event'
   import MonthVieMixin from '../../mixins/mixin-month-views'
 
   export default {
     name: 'calendar-view-month',
     mixins: [MonthVieMixin],
+    components: {Task: TaskWidget, Event: EventWidget},
     props: {
       events: {required: false, type: Array, default: () => []},
       baseDay: {required: false, default: () => moment()}, // @todo Type ?
       displayLinks: {required: false, default: true, type: Boolean},
       displayEvents: {required: false, default: true, type: Boolean},
       displayDayNames: {required: false, default: true, type: Boolean},
-      taskComponent: {required: false, default: () => Task, type: Object}, // @todo exact type ?
-      eventComponent: {required: false, default: () => Event, type: Object} // @todo exact type ?
+      taskComponent: {required: false, default: () => TaskWidget, type: Object}, // @todo exact type ?
+      eventComponent: {required: false, default: () => EventWidget, type: Object} // @todo exact type ?
     },
-    components: {Task, Event},
     data () {
       const days = []
       // Building day names list
