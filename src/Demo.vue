@@ -200,8 +200,8 @@
   import MultidayView from './components/calendar/view-multiday'
   import MonthView from './components/calendar/view-month'
   import WeekView from './components/calendar/view-week'
-  import DynamicView from './components/calendar/view-dynamic'
   // Custom elements
+  import DynamicView from './components/demo/view-dynamic'
   import CustomTask from './components/demo/custom-task'
   import CustomEvent from './components/demo/custom-event'
   // Fake data

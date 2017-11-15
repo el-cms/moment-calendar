@@ -20,9 +20,9 @@
 
 <script>
   import moment from 'moment'
-  import DayView from './view-day'
-  import MonthView from './view-month'
-  import WeekView from './view-week'
+  import DayView from '../calendar/view-day'
+  import MonthView from '../calendar/view-month'
+  import WeekView from '../calendar/view-week'
 
   /**
    * Full example of dynamic components: clicking on a day in month view will display the selected day.
