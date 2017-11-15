@@ -111,14 +111,6 @@
          */
         this.$emit('changeView', view)
       }
-    },
-    watch: {
-      /**
-       * Events list watcher from props
-       */
-      events () {
-        this.fillGrid()
-      }
     }
   }
 </script>
