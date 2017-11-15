@@ -26,7 +26,8 @@
           <div v-for="d, index in m" class="day"
                :class="{
             'out-of-scope': parseInt(targetDate.month(), 10) !== parseInt(mIndex,10),
-            'current-day' : isToday([yIndex, mIndex, index])
+            'current-day' : isToday([yIndex, mIndex, index]),
+            'selected-day': isSelected([yIndex, mIndex, index])
                 }">
             <a class="header" href="#" @click="$emit('viewDay', {type:'day', y:yIndex, m:mIndex, d:index})">
               {{parseInt(index, 10) + 1}}
@@ -73,6 +74,11 @@
        */
       baseDay: {required: false, default: () => moment()}, // @todo Type ?
       /**
+       * First day to display when component is loaded.
+       * Should be a moment object
+       */
+      selectedDay: {required: false, default: () => null}, // @todo Type ?
+      /**
        * Flag to display or not the navigation links allowing to change the day.
        */
       displayLinks: {required: false, default: true, type: Boolean},
@@ -90,6 +96,12 @@
        */
       displayDayNames: {required: false, default: true, type: Boolean},
       /**
+       * Format of the days names.
+       * Refer to the [MomentJS docs](http://momentjs.com/docs/#/displaying/).
+       * Use `"[brackets]"` to escape text.
+       */
+      dayNamesFormat: {required: false, default: 'dddd', type: String},
+      /**
        * Alternative task component. Should be a Vue component object (not the name)
        **/
       taskComponent: {required: false, default: () => TaskWidget, type: Object}, // @todo exact type ?
@@ -102,7 +114,7 @@
       const days = []
       // Building day names list
       for (let i = 1; i <= 7; i++) {
-        days.push(moment().day(i).format('dddd'))
+        days.push(moment().day(i).format(this.dayNamesFormat))
       }
       return {
         // Day to display. Different from the prop, as the day can be changed from the component itself
@@ -153,6 +165,13 @@
       isToday (date) {
         date[2] = parseInt(date[2], 10) + 1
         return this.today.isSame(date, 'day')
+      },
+      isSelected (date) {
+        if (moment.isMoment(this.selectedDay)) {
+          date[2] = parseInt(date[2], 10) + 1
+          return this.selectedDay.isSame(date, 'day')
+        }
+        return false
       }
     },
     created () {
@@ -163,6 +182,9 @@
        * Watches the events prop changes and rebuilds the grid.
        */
       events () {
+        this.grid = this.fillGrid(this.targetDate, this.events)
+      },
+      selectedDay () {
         this.grid = this.fillGrid(this.targetDate, this.events)
       }
     }

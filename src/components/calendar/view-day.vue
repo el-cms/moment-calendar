@@ -96,7 +96,8 @@
        **/
       eventComponent: {required: false, default: () => EventWidget, type: Object}, // @todo exact type ?
       /**
-       * Format of the title. Refer to the [MomentJS docs](http://momentjs.com/docs/#/displaying/)
+       * Format of the title.
+       * Refer to the [MomentJS docs](http://momentjs.com/docs/#/displaying/).
        * Use `"[brackets]"` to escape text.
        **/
       headerFormat: {required: false, default: 'dd, LL', type: String}

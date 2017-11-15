@@ -30,11 +30,16 @@ input {
   border: 1px solid gray;
   background-color: transparent;
   display: block;
+  width: 100%;
   &[type="checkbox"] {
     display: inline;
+    width: auto;
   }
 }
-
+label{
+  display:block;
+  margiin-top: $tiny-value;
+}
 .demo-container {
   border: 1px dashed gray;
   padding: $small-value;

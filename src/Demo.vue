@@ -17,26 +17,31 @@
         <a href="http://vue2-mcalendar.experimentslabs.com/doc">Documentation</a>
         <hr>
         <div>
-          <strong>View:</strong>
+          <strong>Base views:</strong>
           <div class="links grid has-gutter">
-            <a @click="displayView = 'dynamic'" :class="{active:displayView === 'dynamic'}">Dynamic</a>
             <a @click="displayView = 'month'" :class="{active:displayView === 'month'}">Month</a>
             <a @click="displayView = 'week'" :class="{active:displayView === 'week'}">Week</a>
             <a @click="displayView = 'day'" :class="{active:displayView === 'day'}">Day</a>
+            <a @click="displayView = 'small'" :class="{active:displayView === 'small'}">Small</a>
+            <a @click="displayView = 'picker'" :class="{active:displayView === 'picker'}">Picker</a>
+          </div>
+          <strong>Exemples:</strong>
+          <div class="links grid has-gutter">
+            <a @click="displayView = 'dynamic'" :class="{active:displayView === 'dynamic'}">Dynamic</a>
+            <a @click="displayView = 'combined'" :class="{active:displayView === 'combined'}" disabled>Combined</a>
             <a @click="displayView = 'multiday'" :class="{active:displayView === 'multiday'}">X Day</a>
             <a @click="displayView = 'multiweek'" :class="{active:displayView === 'multiweek'}">X Day/week</a>
-            <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Small</a>
-            <a @click="displayView = 'small'" :class="{active:displayView === 'small'}" disabled>Combined</a>
-            <a @click="displayView = 'picker'" :class="{active:displayView === 'picker'}" disabled>Picker</a>
           </div>
         </div>
         <div>
           <strong>Custom components:</strong>
           <div>
             <label for="cst-component">
-              <input type="checkbox" :value="true" name="cst-component" id="cst-component"
+              <input type="checkbox"
+                     :value="true"
+                     name="cst-component" id="cst-component"
                      v-model="useCustomComponents">
-              Custom components
+              Enable custom components
             </label>
           </div>
         </div>
@@ -45,9 +50,10 @@
 
       <!-- Controls + form -->
       <div class="debug">
+        You can add data to the "simple" list using this form:
         <div class="grid has-gutter">
           <div>
-            <strong>New event</strong>
+            <strong>New event</strong><br>
             <!--<form @submit="addEvent()" id="evt-form">-->
             <label for="evt-title">Title</label>
             <input type="text" id="evt-title" name="evt-title" v-model="inputs.event.title">
@@ -68,7 +74,7 @@
           </div>
 
           <div>
-            <strong>New task</strong>
+            <strong>New task</strong><br>
             <!--<form @submit="addTask()" id="tsk-form">-->
             <label for="tsk-title">Title</label>
             <input type="text" id="tsk-title" name="tsk-title" v-model="inputs.task.title">
@@ -92,31 +98,11 @@
 
     <!-- Sample data -->
     <div class="debug">
-      <button @click="showDataset = !showDataset">{{showDataset ? 'Hide' : 'Show' }} dataset</button>
-      <pre v-show="showDataset">{{data}}</pre>
-    </div>
-
-    <!-- Full calendar with reactive component -->
-    <div class="demo-container" v-if="displayView === 'dynamic'">
-      <div class="description">
-        <code>components/calendar/view-dynamic.vue</code>
-        <p>
-          The view is loaded dynamically when clicking on the control buttons. Additionally, an
-          event is fired when a day is clicked in the month view. The component is then changed
-          when the event is catched.
-        </p>
-        <p>
-          Use this "as is" or as an example to build your own dynamic calendar component.
-        </p>
-        <p>
-          Note: there is no custom component used in this one.
-        </p>
+      <button @click="showDataset = !showDataset">{{showDataset ? 'Hide' : 'Show' }} datasets</button>
+      <div class="grid has-gutter">
+        <pre v-show="showDataset"><strong>Simple list:</strong> {{data}}</pre>
+        <pre v-show="showDataset"><strong>Multiple list:</strong> {{multidata}}</pre>
       </div>
-      <!-- Actual calendar, called with a custom component so the views
-           can be changed from here. -->
-      <dynamic-view :events="data"
-                    :base-day="refDay"
-      ></dynamic-view>
     </div>
 
     <!-- Month view only -->
@@ -152,6 +138,24 @@
                 :event-component="eventComponent"></day-view>
     </div>
 
+    <!-- Small calendar view -->
+    <div class="demo-container" v-if="displayView === 'small'">
+      <div class="description">
+        <code>components/calendar/view-month-small.vue</code> &dash;
+        Event payload: <strong>{{pickedDayPayload}}</strong>
+      </div>
+      <small-view :selected-day="smallMonthSelected" @viewDay="setPickedDay"></small-view>
+    </div>
+
+    <!-- Small calendar view -->
+    <div class="demo-container" v-if="displayView === 'picker'">
+      <div class="description">
+        <code>components/calendar/view-month-small.vue</code> &dash;
+        Selected date & time: <strong>{{pickedDate}}</strong> (Note: selected date is UTC time)
+      </div>
+      <picker-view @selected="setPickedDate" :selected-day="pickedDate"></picker-view>
+    </div>
+
     <!-- Multiple days only -->
     <div class="demo-container" v-if="displayView === 'multiday'">
       <div class="description">
@@ -162,6 +166,7 @@
                      :task-component="taskComponent"
                      :event-component="eventComponent"></multiday-view>
     </div>
+
     <!-- Week view with multiple persons -->
     <div class="demo-container" v-if="displayView === 'multiweek'">
       <div class="description">
@@ -174,14 +179,31 @@
                  :event-component="eventComponent"></week-view>
     </div>
 
-    <!-- Small calendar view -->
-    <div class="demo-container" v-if="displayView === 'small'">
+    <!-- Full calendar with reactive component -->
+    <div class="demo-container" v-if="displayView === 'dynamic'">
       <div class="description">
-        <code>components/calendar/view-small.vue</code>
+        <code>components/calendar/view-dynamic.vue</code>
+        <p>
+          The view is loaded dynamically when clicking on the control buttons. Additionally, an
+          event is fired when a day is clicked in the month view. The component is then changed
+          when the event is catched.
+        </p>
+        <p>
+          Use this "as is" or as an example to build your own dynamic calendar component.
+        </p>
+        <p>
+          Note: there is no custom component used in this one.
+        </p>
       </div>
+      <!-- Actual calendar, called with a custom component so the views
+           can be changed from here. -->
+      <dynamic-view :events="data"
+                    :base-day="refDay"
+      ></dynamic-view>
     </div>
+
     <!-- Mixed calendar view -->
-    <div class="demo-container" v-if="displayView === 'mixed'">
+    <div class="demo-container" v-if="displayView === 'combined'">
       <div class="description">
         <code>components/calendar/view-mixed.vue</code>
         <p>
@@ -200,6 +222,8 @@
   import MultidayView from './components/calendar/view-multiday'
   import MonthView from './components/calendar/view-month'
   import WeekView from './components/calendar/view-week'
+  import SmallView from './components/calendar/view-month-small'
+  import PickerView from './components/calendar/view-picker'
   // Custom elements
   import DynamicView from './components/demo/view-dynamic'
   import CustomTask from './components/demo/custom-task'
@@ -211,7 +235,17 @@
 
   export default {
     name: 'app',
-    components: {DayView, MultidayView, WeekView, MonthView, DynamicView, CustomTask, CustomEvent},
+    components: {
+      DayView,
+      MultidayView,
+      PickerView,
+      WeekView,
+      MonthView,
+      SmallView,
+      DynamicView,
+      CustomTask,
+      CustomEvent
+    },
     data () {
       return {
         view: MonthView,
@@ -226,6 +260,9 @@
         displayView: 'dynamic',
         showDataset: false,
         useCustomComponents: false,
+        pickedDate: moment(),
+        smallMonthSelected: moment(),
+        pickedDayPayload: null,
         // Needed to pass to the multi-day/week view
         MultidayView
       }
@@ -297,11 +334,20 @@
         newTask.dueDate = moment(newTask)
         this.data.push(newTask)
         this.inputs.task = this.resetTask()
+      },
+      setPickedDate (d) {
+        this.pickedDate = d
+      },
+      setPickedDay (d) {
+        this.smallMonthSelected = this.smallMonthSelected.clone()
+          .year(d.y)
+          .month(d.m)
+          .date(parseInt(d.d, 10) + 1)
+        this.pickedDayPayload = d
       }
     },
     created () {
       this.$on('changeView', function (payload) {
-        console.log(payload)
         this.logEvent('changeView', payload)
       })
     }

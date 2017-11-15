@@ -62,6 +62,62 @@
             font-weight: bold;
           }
         }
+        &.selected-day {
+          .header {
+            background-color: teal;
+          }
+        }
+      }
+    }
+    .out-of-scope {
+      color: gray;
+      background-color: $cell-disabled-bg;
+    }
+  }
+  /* Small month widget */
+  &--month-small {
+    max-width: 250px;
+    width: 250px;
+    .#{$prefix}-cal-links {
+      font-size: .8em !important; // @todo Change this
+      .link {
+        // Buttons
+      }
+    }
+    /* Day names */
+    .#{$prefix}-headers {
+      display: flex;
+      width: 100%;
+      .day {
+        width: calc(100% / 7);
+        text-align: center;
+        padding: .5em;
+      }
+    }
+    /* List of all days */
+    .#{$prefix}-days {
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      background-color: $cell-bg;
+      /* One day cell */
+      .day {
+        width: calc(100% / 7);
+        min-height: initial;
+        height: 4rem;
+        border: none;
+        border-width: 0 0 1px 1px;
+        padding: .5em;
+        text-align: center;
+        .header {
+          text-decoration: none;
+          color: blue;
+        }
+        &.current-day {
+          .header {
+            font-weight: bold;
+          }
+        }
       }
     }
     .out-of-scope {
@@ -144,6 +200,21 @@
           width: calc(100vw / 3 - 1px);
           min-width: calc(100vw / 3 - 1px);
           max-width: calc(100vw / 3 - 1px);
+        }
+      }
+    }
+  }
+  &--picker {
+    width: 250px;
+    .time {
+      margin: $small-value 0;
+      display: flex;
+      &_element {
+        button {
+          width: 100%;
+        }
+        input {
+          text-align: center;
         }
       }
     }
