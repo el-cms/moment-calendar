@@ -1,5 +1,5 @@
 <template>
-  <div class="mc-event" :class="cssClass">{{data.title}} - d: {{duration}}h</div>
+  <div class="mc-event mc-event-custom" :class="cssClass">{{data.title}} - d: {{duration}}h</div>
 </template>
 
 <script>
@@ -44,13 +44,3 @@
     }
   }
 </script>
-
-<style scoped>
-  .mc-event {
-    font-family: cursive;
-    background-color: yellow;
-    color: red;
-    border-radius: 3px;
-    border: 1px solid blue;
-  }
-</style>
